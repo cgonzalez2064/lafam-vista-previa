@@ -728,11 +728,6 @@ button[type="submit"]:disabled { opacity: .6; cursor: progress; }
 .service-open:active { transform: scale(.96); }
 /* LaFam: four equal cards, no featured first card. */
 
-/* Emergency: the one service that must read as urgent at a glance. */
-.service-card[data-service="service1"] { background: linear-gradient(135deg, color-mix(in srgb, var(--emergency) 9%, var(--surface)) 0%, var(--surface) 70%); border-color: color-mix(in srgb, var(--emergency) 28%, var(--line)); }
-.service-card[data-service="service1"] h3 { font-size: 1.4rem; }
-.service-card[data-service="service1"] .service-body { justify-content: center; }
-@media (min-width: 620px) { .service-card[data-service="service1"] .service-body { padding: 32px; } .service-card[data-service="service1"] p { max-width: 60ch; flex: 0; } }
 
 /* Service details sheet: bottom sheet on phones, centred card on larger screens. */
 .sheet-service { position: fixed; inset: auto 0 0 0; width: 100%; max-height: 92vh; border-radius: 28px 28px 0 0; background: var(--surface); transform: translateY(100%); padding-bottom: env(safe-area-inset-bottom); }
@@ -921,3 +916,11 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 /* Four services: two by two on tablets and up. */
 @media (min-width: 620px) { .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .service-card:first-child { grid-column: auto; } }
 .service-media.service-art img, .area-art img { width: auto; height: 46%; max-height: 150px; object-fit: contain; aspect-ratio: auto; }
+
+/* LaFam minimal layout: no form until the clinic has an email; contact info centred alone. */
+.contact-solo { grid-template-columns: minmax(0, 720px) !important; justify-content: center; }
+.contact-solo .contact-form-wrap { display: none; }
+@media (min-width: 960px) { .quick { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .maternity-grid { grid-template-columns: 1fr 1fr; align-items: center; } }
+@media (max-width: 959px) { .quick .q-map { grid-column: 1 / -1; } }
+@media (max-width: 619px) { .hero-brand-card { max-width: 220px; margin-inline: auto; } }
