@@ -1,0 +1,22 @@
+{
+  "name": "Clínica LaFam",
+  "short_name": "LaFam",
+  "description": "Ultrasonidos 4D y 5D, control prenatal y atención ginecológica en Ciudad de Guatemala",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#C91180",
+  "lang": "es-GT",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
