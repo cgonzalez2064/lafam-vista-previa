@@ -140,6 +140,7 @@
     <nav class="nav-desktop" aria-label="Principal">
       <a href="#servicios" data-i18n="nav.services">Servicios</a>
       <a href="#ultrasonidos" data-i18n="nav.maternity">Ultrasonidos</a>
+      <a href="#galeria" data-i18n="nav.facilities">Galería</a>
 
       <a href="#contacto" data-i18n="nav.contact">Contacto</a>
     </nav>
@@ -160,6 +161,7 @@
   <nav class="mobile-links">
     <a href="#servicios" data-i18n="nav.services">Servicios</a>
     <a href="#ultrasonidos" data-i18n="nav.maternity">Ultrasonidos</a>
+    <a href="#galeria" data-i18n="nav.facilities">Galería</a>
 
     <a href="#contacto" data-i18n="nav.contact">Contacto</a>
   </nav>
@@ -206,8 +208,11 @@
           <a class="btn btn-glass btn-lg btn-call" href="tel:+50230290609"><svg aria-hidden="true"><use href="#i-phone"/></svg><span data-i18n="hero.cta1">Llamar a la clínica</span></a>
         </div>
       </div>
-      <div class="hero-art hero-art-brand" aria-hidden="true">
-        <div class="hero-brand-card"><img src="assets/img/brand/logo-vertical.webp" width="540" height="640" alt="" fetchpriority="high"></div>
+      <div class="hero-art" data-parallax>
+          <figure class="hero-photo p1"><img class="hero-img" src="assets/img/site/hero-5d.webp" srcset="assets/img/site/hero-5d.webp 1176w" sizes="(max-width: 900px) 60vw, 300px" width="1176" height="1176" alt="Ultrasonido 5D" data-i18n-attr="alt:media.hero1.alt" fetchpriority="high" decoding="async"></figure>
+          <figure class="hero-photo p2"><img class="hero-img" src="assets/img/site/us-11.webp" srcset="assets/img/site/us-11.webp 1176w" sizes="(max-width: 900px) 60vw, 300px" width="1176" height="1176" alt="Ultrasonido 5D" data-i18n-attr="alt:media.hero2.alt" loading="lazy" decoding="async"></figure>
+          <figure class="hero-photo p3"><img class="hero-img" src="assets/img/site/us-9.webp" srcset="assets/img/site/us-9.webp 1176w" sizes="(max-width: 900px) 60vw, 300px" width="1176" height="1176" alt="Ultrasonido 5D" data-i18n-attr="alt:media.hero3.alt" loading="lazy" decoding="async"></figure>
+        <span class="hero-wing" aria-hidden="true"></span>
       </div>
     </div>
     <div class="container">
@@ -227,10 +232,10 @@
         <h2 data-i18n="services.title">Nuestros servicios</h2>
       </div>
       <ul class="services-grid">
-        <li class="service-card reveal i1" data-service="service1"><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-1"/></svg></span><h3 data-i18n="service1.title">Ultrasonidos</h3><p data-i18n="service1.desc">Ultrasonidos ginecológicos, obstétricos, 4D, 5D y de silueta para chequear tu salud y la de tu bebé.</p><div class="service-actions"></div></div></li>
-        <li class="service-card reveal i2" data-service="service2"><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-2"/></svg></span><h3 data-i18n="service2.title">Control prenatal</h3><p data-i18n="service2.desc">Te brindamos control prenatal, ultrasonido y monitoreo fetal durante todo el embarazo.</p><div class="service-actions"></div></div></li>
-        <li class="service-card reveal i3" data-service="service3"><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-3"/></svg></span><h3 data-i18n="service3.title">Atención ginecológica</h3><p data-i18n="service3.desc">Brindamos atención ginecológica, Papanicolaou, colposcopia y orientación en planificación familiar.</p><div class="service-actions"></div></div></li>
-        <li class="service-card reveal i1" data-service="service4"><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-4"/></svg></span><h3 data-i18n="service4.title">Cirugía obstétrica y ginecológica</h3><p data-i18n="service4.desc">Atendemos partos, cesáreas, histerectomías y otros procedimientos médicos para cuidar de tu salud.</p><div class="service-actions"></div></div></li>
+        <li class="service-card reveal i1 has-photo" data-service="service1"><span class="service-media"><img class="service-photo" src="assets/img/site/svc-ultrasonido.webp" srcset="assets/img/site/svc-ultrasonido.webp 741w" sizes="(max-width: 620px) 92vw, (max-width: 960px) 46vw, 376px" width="741" height="653" alt="Ultrasonido normal" data-i18n-attr="alt:media.service1.alt" loading="lazy" decoding="async"></span><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-1"/></svg></span><h3 data-i18n="service1.title">Ultrasonidos</h3><p data-i18n="service1.desc">Ultrasonidos ginecológicos, obstétricos, 4D, 5D y de silueta para chequear tu salud y la de tu bebé.</p><div class="service-actions"></div></div></li>
+        <li class="service-card reveal i2 has-photo" data-service="service2"><span class="service-media"><img class="service-photo" src="assets/img/site/svc-prenatal.webp" srcset="assets/img/site/svc-prenatal.webp 1400w" sizes="(max-width: 620px) 92vw, (max-width: 960px) 46vw, 376px" width="1400" height="933" alt="Control prenatal" data-i18n-attr="alt:media.service2.alt" loading="lazy" decoding="async"></span><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-2"/></svg></span><h3 data-i18n="service2.title">Control prenatal</h3><p data-i18n="service2.desc">Te brindamos control prenatal, ultrasonido y monitoreo fetal durante todo el embarazo.</p><div class="service-actions"></div></div></li>
+        <li class="service-card reveal i3 has-photo" data-service="service3"><span class="service-media"><img class="service-photo" src="assets/img/site/svc-ginecologia.webp" srcset="assets/img/site/svc-ginecologia.webp 1400w" sizes="(max-width: 620px) 92vw, (max-width: 960px) 46vw, 376px" width="1400" height="1001" alt="Ginecología y obstetricia" data-i18n-attr="alt:media.service3.alt" loading="lazy" decoding="async"></span><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-3"/></svg></span><h3 data-i18n="service3.title">Atención ginecológica</h3><p data-i18n="service3.desc">Brindamos atención ginecológica, Papanicolaou, colposcopia y orientación en planificación familiar.</p><div class="service-actions"></div></div></li>
+        <li class="service-card reveal i1 has-photo" data-service="service4"><span class="service-media"><img class="service-photo" src="assets/img/site/svc-cirugia.webp" srcset="assets/img/site/svc-cirugia.webp 1400w" sizes="(max-width: 620px) 92vw, (max-width: 960px) 46vw, 376px" width="1400" height="912" alt="Cirugías de obstetricia y ginecología" data-i18n-attr="alt:media.service4.alt" loading="lazy" decoding="async"></span><div class="service-body"><span class="service-icon" aria-hidden="true"><svg><use href="#s-4"/></svg></span><h3 data-i18n="service4.title">Cirugía obstétrica y ginecológica</h3><p data-i18n="service4.desc">Atendemos partos, cesáreas, histerectomías y otros procedimientos médicos para cuidar de tu salud.</p><div class="service-actions"></div></div></li>
       </ul>
     </div>
   </section>
@@ -246,8 +251,6 @@
           <div class="cta-row">
             <a class="btn btn-primary" data-wa="maternity.cta" href="https://wa.me/50230290609?text=Hola%2C%20quisiera%20agendar%20una%20cita%20en%20Cl%C3%ADnica%20LaFam." target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="maternity.cta">Agenda tu ultrasonido</span></a>
           </div>
-        </div>
-        <div class="maternity-side">
           <div class="card price-card reveal">
             <h3 class="price-head" data-i18n="maternity.prices">Precios</h3>
             <dl class="price-list">
@@ -259,11 +262,29 @@
           </div>
 
         </div>
+        <div class="maternity-side">
+        <figure class="maternity-photo reveal" data-parallax><img class="maternity-img" src="assets/img/site/us-3.webp" srcset="assets/img/site/us-3.webp 1176w" sizes="(max-width: 1000px) 92vw, 420px" width="1176" height="1176" alt="Ultrasonido 5D" data-i18n-attr="alt:media.maternity.alt" loading="lazy" decoding="async"></figure>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ======================== GALLERY (platform "facilities" block) ======================== -->
+  <section id="galeria" class="section facilities">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="projects.eyebrow">Galería</p>
+        <h2 data-i18n="projects.title">Diferentes ultrasonidos</h2>
+        <p class="lead" data-i18n="projects.desc">Todas las fotos y videos fueron tomadas en nuestra clínica.</p>
+      </div>
+      <div class="areas-grid">
+        <article class="area-card reveal i1 has-photo" data-project="proj1" data-images="assets/img/site/ej-4d.webp"><img class="area-photo" src="assets/img/site/ej-4d.webp" srcset="assets/img/site/ej-4d.webp 1176w" sizes="(max-width: 620px) 92vw, (max-width: 980px) 46vw, 376px" width="1176" height="1176" alt="Ultrasonido 4D" data-i18n-attr="alt:media.proj1.card.alt" loading="lazy" decoding="async"><div class="area-body"><span class="tag" data-i18n="proj1.tag">Ultrasonido</span><h3 data-i18n="proj1.title">Ultrasonido 4D</h3><button type="button" class="area-open"><span data-i18n="projects.view_details">Ver fotos</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button></div><span class="area-art-src" hidden><span class="area-art a1" aria-hidden="true"><img src="assets/img/brand/mark-white.webp" alt="" width="417" height="512" loading="lazy" decoding="async"></span></span></article>
+        <article class="area-card reveal i2 has-photo" data-project="proj2" data-images="assets/img/site/ej-5d.webp, assets/img/site/us-2.webp, assets/img/site/us-5.webp, assets/img/site/us-8.webp"><img class="area-photo" src="assets/img/site/ej-5d.webp" srcset="assets/img/site/ej-5d.webp 1176w" sizes="(max-width: 620px) 92vw, (max-width: 980px) 46vw, 376px" width="1176" height="1176" alt="Ultrasonido 5D" data-i18n-attr="alt:media.proj2.card.alt" loading="lazy" decoding="async"><div class="area-body"><span class="tag" data-i18n="proj2.tag">Ultrasonido</span><h3 data-i18n="proj2.title">Ultrasonido 5D</h3><button type="button" class="area-open"><span data-i18n="projects.view_details">Ver fotos</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button></div><span class="area-art-src" hidden><span class="area-art a2" aria-hidden="true"><img src="assets/img/brand/mark-white.webp" alt="" width="417" height="512" loading="lazy" decoding="async"></span></span></article>
+        <article class="area-card reveal i3 has-photo" data-project="proj3" data-images="assets/img/site/ej-5d-luz.webp"><img class="area-photo" src="assets/img/site/ej-5d-luz.webp" srcset="assets/img/site/ej-5d-luz.webp 1176w" sizes="(max-width: 620px) 92vw, (max-width: 980px) 46vw, 376px" width="1176" height="1176" alt="Ultrasonido 5D de luz" data-i18n-attr="alt:media.proj3.card.alt" loading="lazy" decoding="async"><div class="area-body"><span class="tag" data-i18n="proj3.tag">Ultrasonido</span><h3 data-i18n="proj3.title">Ultrasonido 5D de luz</h3><button type="button" class="area-open"><span data-i18n="projects.view_details">Ver fotos</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button></div><span class="area-art-src" hidden><span class="area-art a3" aria-hidden="true"><img src="assets/img/brand/mark-white.webp" alt="" width="417" height="512" loading="lazy" decoding="async"></span></span></article>
+        <article class="area-card reveal i1 has-photo" data-project="proj4" data-images="assets/img/site/ej-silueta.webp, assets/img/site/us-1.webp, assets/img/site/us-7.webp"><img class="area-photo" src="assets/img/site/ej-silueta.webp" srcset="assets/img/site/ej-silueta.webp 1176w" sizes="(max-width: 620px) 92vw, (max-width: 980px) 46vw, 376px" width="1176" height="1176" alt="Ultrasonido 5D de silueta" data-i18n-attr="alt:media.proj4.card.alt" loading="lazy" decoding="async"><div class="area-body"><span class="tag" data-i18n="proj4.tag">Ultrasonido</span><h3 data-i18n="proj4.title">Ultrasonido de silueta</h3><button type="button" class="area-open"><span data-i18n="projects.view_details">Ver fotos</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button></div><span class="area-art-src" hidden><span class="area-art a4" aria-hidden="true"><img src="assets/img/brand/mark-white.webp" alt="" width="417" height="512" loading="lazy" decoding="async"></span></span></article>
+      </div>
+    </div>
+  </section>
 
   <!-- ======================== FAQ ======================== -->
 
@@ -373,6 +394,7 @@
       <ul>
         <li><a href="#servicios" data-i18n="nav.services">Servicios</a></li>
         <li><a href="#ultrasonidos" data-i18n="nav.maternity">Ultrasonidos</a></li>
+        <li><a href="#galeria" data-i18n="nav.facilities">Galería</a></li>
 
       </ul>
     </nav>
@@ -440,6 +462,7 @@
   <div class="visually-hidden" id="galleryLive" aria-live="polite"></div>
 </dialog>
 
+<script type="application/json" id="siteContent">{"v":1,"i18n":{"es":{"media.service1.alt":"Ultrasonido normal","media.service2.alt":"Control prenatal","media.service3.alt":"Ginecología y obstetricia","media.service4.alt":"Cirugías de obstetricia y ginecología","media.proj1.card.alt":"Ultrasonido 4D","media.proj2.card.alt":"Ultrasonido 5D","media.proj3.card.alt":"Ultrasonido 5D de luz","media.proj4.card.alt":"Ultrasonido 5D de silueta","media.hero1.alt":"Ultrasonido 5D","media.hero2.alt":"Ultrasonido 5D","media.hero3.alt":"Ultrasonido 5D","media.maternity.alt":"Ultrasonido 5D"},"en":{"media.service1.alt":"Standard ultrasound","media.service2.alt":"Prenatal check-up","media.service3.alt":"Gynecology and obstetrics","media.service4.alt":"Obstetric and gynecological surgery","media.proj1.card.alt":"4D ultrasound","media.proj2.card.alt":"5D ultrasound","media.proj3.card.alt":"5D light ultrasound","media.proj4.card.alt":"5D silhouette ultrasound","media.hero1.alt":"5D ultrasound","media.hero2.alt":"5D ultrasound","media.hero3.alt":"5D ultrasound","media.maternity.alt":"5D ultrasound"}},"images":{"assets/img/site/ej-4d.webp":{"alt":{"es":"Ultrasonido 4D","en":"4D ultrasound"},"srcset":"assets/img/site/ej-4d.webp 1176w"},"assets/img/site/ej-5d.webp":{"alt":{"es":"Ultrasonido 5D","en":"5D ultrasound"},"srcset":"assets/img/site/ej-5d.webp 1176w"},"assets/img/site/us-2.webp":{"alt":{"es":"Ultrasonido 5D","en":"5D ultrasound"},"srcset":"assets/img/site/us-2.webp 1176w"},"assets/img/site/us-5.webp":{"alt":{"es":"Ultrasonido 5D","en":"5D ultrasound"},"srcset":"assets/img/site/us-5.webp 1176w"},"assets/img/site/us-8.webp":{"alt":{"es":"Ultrasonido 5D","en":"5D ultrasound"},"srcset":"assets/img/site/us-8.webp 1176w"},"assets/img/site/ej-5d-luz.webp":{"alt":{"es":"Ultrasonido 5D de luz","en":"5D light ultrasound"},"srcset":"assets/img/site/ej-5d-luz.webp 1176w"},"assets/img/site/ej-silueta.webp":{"alt":{"es":"Ultrasonido 5D de silueta","en":"5D silhouette ultrasound"},"srcset":"assets/img/site/ej-silueta.webp 1176w"},"assets/img/site/us-1.webp":{"alt":{"es":"Ultrasonido de silueta de un feto","en":"Silhouette ultrasound of a fetus"},"srcset":"assets/img/site/us-1.webp 1176w"},"assets/img/site/us-7.webp":{"alt":{"es":"Ultrasonido 5D de un embrión humano en etapa temprana de desarrollo","en":"5D ultrasound of an early-stage human embryo"},"srcset":"assets/img/site/us-7.webp 1176w"}}}</script>
 <script src="assets/main.js?v=14" defer></script>
 <script src="assets/stats.js?v=14" defer></script>
 </body>
