@@ -131,9 +131,9 @@
       "why5": "",
       "why6": "",
       "projects.eyebrow": "Galería",
-      "projects.title": "Diferentes ultrasonidos",
-      "projects.desc": "Todas las fotos y videos fueron tomadas en nuestra clínica.",
-      "gallery.more": "Ver más ultrasonidos",
+      "projects.title": "Así se ve tu bebé en <em>4D y 5D</em>",
+      "projects.desc": "Fotos y videos reales, tomados en nuestra clínica.",
+      "gallery.more": "Ver toda la galería",
       "gallery.less": "Ver menos",
       "projects.view_details": "Ver fotos",
       "proj1.tag": "Ultrasonido",
@@ -474,10 +474,10 @@
       "why5": "",
       "why6": "",
       "projects.eyebrow": "Gallery",
-      "projects.title": "Different ultrasounds",
-      "projects.desc": "All photos and videos were taken at our clinic.",
-      "gallery.more": "See more ultrasounds",
-      "gallery.less": "See less",
+      "projects.title": "Your baby, in <em>4D and 5D</em>",
+      "projects.desc": "Real photos and videos, taken at our clinic.",
+      "gallery.more": "View the full gallery",
+      "gallery.less": "Show less",
       "projects.view_details": "See photos",
       "proj1.tag": "Ultrasound",
       "proj1.title": "4D ultrasound",
@@ -1068,7 +1068,7 @@
         var paths = (galGrid.getAttribute('data-images') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
         var start = parseInt(btn.getAttribute('data-index'), 10) || 0;
         tagEl.textContent = t('projects.eyebrow');
-        titleEl.textContent = t('projects.title');
+        titleEl.textContent = t('projects.title').replace(/<[^>]+>/g, '');
         descEl.textContent = '';
         slidesEl.innerHTML = '';
         dotsEl.innerHTML = '';
@@ -1158,6 +1158,16 @@
       if (!open) grid.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
     });
   }
+  if (galMore){
+    var galFit = function(){
+      var grid = document.getElementById('galGrid');
+      if (!grid || grid.classList.contains('is-open')) return;
+      var folded = [].some.call(grid.children, function(c){ return getComputedStyle(c).display === 'none'; });
+      galMore.parentNode.hidden = !folded;
+    };
+    galFit();
+    window.addEventListener('resize', galFit, { passive: true });
+  }
   var saveData = !!(navigator.connection && navigator.connection.saveData);
   var stillOnly = function(){ return reduceMotion || saveData || document.documentElement.classList.contains('a11y-motion'); };
   var tryPlay = function(v){ if (stillOnly()) return; var p = v.play(); if (p && p.catch) p.catch(function(){}); };
@@ -1180,6 +1190,7 @@
     document.querySelectorAll('video[data-i18n-aria-es]').forEach(function(v){
       v.setAttribute('aria-label', v.getAttribute(currentLang === 'en' ? 'data-i18n-aria-en' : 'data-i18n-aria-es'));
     });
+    document.querySelectorAll('.gal-chip[data-es]').forEach(function(c){ c.textContent = c.getAttribute(currentLang === 'en' ? 'data-en' : 'data-es'); });
     if (galMore){
       var g = document.getElementById('galGrid');
       galMore.querySelector('span').textContent = t(g && g.classList.contains('is-open') ? 'gallery.less' : 'gallery.more');

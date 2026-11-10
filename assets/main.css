@@ -931,22 +931,34 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
    Masonry columns keep every ultrasound whole (no cropping). Tiles are never
    wider than the photos themselves (WhatsApp exports, ~400-900 px), so they
    stay sharp on phones and retina screens. */
-.gal-grid { columns: 2; column-gap: 10px; margin-top: 8px; }
-@media (min-width: 720px) { .gal-grid { columns: 3; column-gap: 14px; } }
-@media (min-width: 1100px) { .gal-grid { columns: 4; column-gap: 16px; } }
-.gal-item { display: block; width: 100%; margin: 0 0 10px; padding: 0; border: 0; border-radius: 18px; overflow: hidden; background: #0b0508; break-inside: avoid; position: relative; box-shadow: var(--shadow-sm, 0 1px 2px rgba(42, 20, 36, .08)); -webkit-tap-highlight-color: transparent; }
-@media (min-width: 720px) { .gal-item { margin-bottom: 14px; border-radius: 20px; } }
-@media (min-width: 1100px) { .gal-item { margin-bottom: 16px; } }
-.gal-item img, .gal-item video { display: block; width: 100%; height: auto; }
-.gal-photo { cursor: zoom-in; }
-.gal-photo img { transition: transform 600ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
-@media (hover: hover) { .gal-photo:hover img { transform: scale(1.04); } }
-.gal-photo:active { transform: scale(.98); transition: transform 100ms ease-out; }
+/* Gallery: an even grid of same-shape tiles (4:5) with a large 2x2 "feature" tile
+   every 13 tiles, so rows line up at every width (36 photos + 3 clips fill the grid
+   exactly with 2, 3 or 4 columns). Photos fill their tile (object-fit: cover); the
+   whole photo opens in the viewer. Frames match the hero collage: white border,
+   soft shadow, generous radius. Collapsed: 3 rows (feature + the next tiles). */
+.gal-grid { --gap: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: var(--gap); margin-top: 8px; }
+@media (min-width: 720px) { .gal-grid { --gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .gal-grid { --gap: 20px; grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.gal-item { display: block; aspect-ratio: 4 / 5; min-width: 0; margin: 0; padding: 0; border: 3px solid var(--surface, #fff); border-radius: 18px; overflow: hidden; background: #0b0508; position: relative; isolation: isolate; box-shadow: var(--shadow-md, 0 10px 30px -12px rgba(42, 20, 36, .3)); -webkit-tap-highlight-color: transparent; }
+.gal-feature { grid-column: span 2; aspect-ratio: 1 / 1; }
+@media (min-width: 720px) { .gal-feature { grid-row: span 2; aspect-ratio: auto; } .gal-feature-r { grid-column: 2 / span 2; } }
+@media (min-width: 1100px) { .gal-feature-r { grid-column: 3 / span 2; } }
+@media (min-width: 720px) { .gal-item { border-width: 5px; border-radius: 24px; } .gal-feature { border-radius: 30px; } }
+.gal-item img, .gal-item video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.gal-photo { cursor: zoom-in; transition: transform 160ms var(--ease-out, ease-out); }
+.gal-photo img { transition: transform 700ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
+@media (hover: hover) { .gal-photo:hover img { transform: scale(1.045); } }
+.gal-photo:active { transform: scale(.98); transition-duration: 100ms; }
 .gal-photo:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-.gal-video::after { content: ""; position: absolute; top: 10px; left: 10px; width: 10px; height: 10px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, .25); opacity: .9; }
-.gal-grid:not(.is-open) .is-more { display: none; }
-.gal-more { display: flex; justify-content: center; margin-top: 18px; }
-.gal-grid.is-open + .gal-more svg { transform: rotate(-90deg); }
+.gal-chip { position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; border-radius: 999px; font-size: .75rem; font-weight: 600; letter-spacing: .01em; color: #fff; background: rgba(20, 8, 16, .55); -webkit-backdrop-filter: blur(12px) saturate(160%); backdrop-filter: blur(12px) saturate(160%); pointer-events: none; }
+@media (prefers-reduced-transparency: reduce) { .gal-chip { background: rgba(20, 8, 16, .9); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* Collapsed: phones feature + 4 tiles; tablets feature + 5; computers feature + 8. */
+.gal-grid:not(.is-open) > :nth-child(n+6) { display: none; }
+@media (min-width: 720px) { .gal-grid:not(.is-open) > :nth-child(n+6) { display: block; } .gal-grid:not(.is-open) > :nth-child(n+7) { display: none; } }
+@media (min-width: 1100px) { .gal-grid:not(.is-open) > :nth-child(n+7) { display: block; } .gal-grid:not(.is-open) > :nth-child(n+10) { display: none; } }
+.gal-actions { justify-content: center; margin-top: 32px; }
+.gal-more[hidden] { display: none; }
+.gal-grid.is-open + .gal-actions .gal-more svg { transform: rotate(-90deg); }
 .gal-more svg { transform: rotate(90deg); transition: transform 200ms ease; }
 
 /* Viewer: show each ultrasound whole on black, at most its own size. */
