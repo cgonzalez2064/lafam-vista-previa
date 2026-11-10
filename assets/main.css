@@ -976,6 +976,23 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 }
 .sheet-gallery #galleryDesc:empty { display: none; }
 
+/* Hero collage: the sharpest photo leads (5:6, its own shape, so nothing is cut);
+   two smaller ones overlap it. Phones: the lead photo full width, the two others
+   side by side below. */
+@media (max-width: 899px) {
+  .hero-art { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hero-photo.p1 { grid-column: 1 / -1; aspect-ratio: 5 / 6; max-width: 520px; width: 100%; justify-self: center; border-radius: 24px; }
+  .hero-photo.p2, .hero-photo.p3 { aspect-ratio: 4 / 5; border-radius: 20px; }
+}
+@media (min-width: 900px) {
+  .hero-photo.p1 { width: 64%; aspect-ratio: 5 / 6; right: 6%; top: 0; }
+  .hero-photo.p2 { width: 40%; aspect-ratio: 4 / 5; }
+  .hero-photo.p3 { width: 34%; }
+}
+.sheet-gallery .gallery-body .tag { justify-self: start; }
+}
+.sheet-gallery #galleryDesc:empty { display: none; }
+
 /* Hero clip: plays like a moving photo in the main tile. */
 .hero-video { background: #0b0508; }
 .hero-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -1028,19 +1045,36 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 .js-motion .gal-grid.is-filtered > :not(.is-out) { animation: gal-in 360ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)) both; }
 @keyframes gal-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
 .gal-video { cursor: zoom-in; }
+/* Clips behave like moving photos: the video never takes the pointer, so the
+   browser never draws its own play/next control over the tile. */
+.gal-item video, .hero-photo video { pointer-events: none; }
+.gal-item video::-webkit-media-controls, .gal-item video::-webkit-media-controls-panel,
+.gal-item video::-webkit-media-controls-start-playback-button, .gal-item video::-webkit-media-controls-overlay-play-button,
+.uv-media::-webkit-media-controls, .uv-media::-webkit-media-controls-panel,
+.uv-media::-webkit-media-controls-start-playback-button, .uv-media::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }
 @media (hover: hover) { .gal-video:hover video { transform: scale(1.045); } }
 .gal-video video { transition: transform 700ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
 .gal-video:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
-/* ======================== Gallery viewer ======================== */
-.uv { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(5, 3, 4); color: #fff; overflow: hidden; }
-.uv::backdrop { background: transparent; }
+/* ======================== Gallery viewer ========================
+   A floating card over the dimmed, blurred page: a dark stage for the picture
+   (ultrasounds are rendered on black) and a light caption bar below. Never a
+   full-screen black screen; the page stays visible around it. */
+.uv { position: fixed; inset: 0; margin: auto; padding: 0; border: 0; overflow: hidden; color: var(--text);
+  width: min(920px, calc(100vw - 24px)); height: min(860px, calc(100dvh - 48px));
+  max-width: none; max-height: none; border-radius: 28px; background: var(--surface, #fff);
+  box-shadow: 0 30px 80px -20px rgba(42, 10, 30, .45), 0 0 0 1px rgba(255, 255, 255, .5); }
+.uv::backdrop { background: rgba(38, 14, 30, .5); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); }
+@media (prefers-reduced-transparency: reduce) { .uv::backdrop { background: rgba(38, 14, 30, .82); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* Phones: the card hugs the picture (ultrasounds are about 4:5) instead of the whole screen. */
+@media (max-width: 719px) { .uv { width: calc(100vw - 24px); height: min(calc(100dvh - 40px), calc((100vw - 40px) * 1.25 + 92px)); border-radius: 24px; } }
 .uv:focus { outline: none; }
-.uv-track { position: absolute; inset: 0 0 76px; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; touch-action: pan-x pinch-zoom; outline: none; }
+.uv-track { position: absolute; inset: 8px 8px 76px; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; touch-action: pan-x pinch-zoom; outline: none; border-radius: 21px; background: #0b0508; }
+@media (max-width: 719px) { .uv-track { border-radius: 18px; } }
 .uv-track::-webkit-scrollbar { display: none; }
-.uv-slide { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; display: grid; place-items: center; padding: calc(12px + env(safe-area-inset-top)) 12px 0; position: relative; }
-@media (min-width: 900px) { .uv-slide { padding: 28px 88px 0; } }
-.uv-media { width: 100%; height: 100%; max-width: var(--mw, 100%); max-height: var(--mh, 100%); object-fit: contain; border-radius: 14px; display: block; will-change: transform; user-select: none; -webkit-user-drag: none; }
+.uv-slide { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; display: grid; place-items: center; padding: 8px; position: relative; }
+@media (min-width: 900px) { .uv-slide { padding: 20px 76px; } }
+.uv-media { width: 100%; height: 100%; max-width: var(--mw, 100%); max-height: var(--mh, 100%); object-fit: contain; border-radius: 12px; display: block; will-change: transform; user-select: none; -webkit-user-drag: none; }
 .uv-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 68px; height: 68px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); cursor: pointer; }
 .uv-play::before { content: ""; position: absolute; left: 27px; top: 22px; border-style: solid; border-width: 12px 0 12px 20px; border-color: transparent transparent transparent #fff; }
 .uv-play:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
@@ -1049,14 +1083,21 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 .uv-nav:active, .uv-close:active { transform: scale(.92); }
 .uv-nav:focus-visible, .uv-close:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .uv-nav svg, .uv-close svg { width: 22px; height: 22px; }
-.uv-nav { top: calc(50% - 38px); translate: 0 -50%; }
-.uv-nav.prev { left: 20px; } .uv-nav.prev svg { transform: scaleX(-1); }
-.uv-nav.next { right: 20px; }
+.uv-nav { top: calc(50% - 34px); translate: 0 -50%; }
+.uv-nav.prev { left: 22px; } .uv-nav.prev svg { transform: scaleX(-1); }
+.uv-nav.next { right: 22px; }
 .uv-nav:disabled { opacity: 0; pointer-events: none; }
 @media (max-width: 899px), (hover: none) { .uv-nav { display: none; } }
-.uv-close { top: calc(14px + env(safe-area-inset-top)); right: 14px; }
-.uv-caption { position: absolute; left: 0; right: 0; bottom: 0; height: 76px; padding: 0 20px calc(env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: center; gap: 12px; text-align: center; }
-.uv-count { flex: none; padding: 3px 9px; border-radius: 999px; font-size: .78rem; font-weight: 600; font-variant-numeric: tabular-nums; background: rgba(255, 255, 255, .12); color: rgba(255, 255, 255, .85); }
-.uv-title { margin: 0; font-size: .95rem; line-height: 1.35; color: rgba(255, 255, 255, .92); max-width: 60ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.uv-close { top: 18px; right: 18px; width: 40px; height: 40px; }
+.uv-close svg { width: 18px; height: 18px; }
+.uv-caption { position: absolute; left: 0; right: 0; bottom: 0; height: 76px; padding: 0 22px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; text-align: left; }
+.uv-count { flex: none; padding: 4px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; font-variant-numeric: tabular-nums; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.uv-title { margin: 0; font-size: .95rem; line-height: 1.35; color: var(--text); font-weight: 500; max-width: 60ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .uv.is-open { animation: none; }
 
+/* Phones: the three filters share the width evenly on one line; counts drop below 480 px. */
+@media (max-width: 599px) {
+  .gal-filter { display: grid; grid-template-columns: auto 1fr 1fr; width: 100%; }
+  .gal-tab { padding: 0 12px; font-size: .875rem; white-space: nowrap; justify-content: center; }
+}
+@media (max-width: 479px) { .gal-tab .gal-count { display: none; } }

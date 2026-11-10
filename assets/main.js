@@ -135,7 +135,9 @@
       "projects.desc": "Fotos y videos reales, tomados en nuestra clínica.",
       "gallery.more": "Ver toda la galería",
       "gallery.filter_all": "Todas",
-      "gallery.filter_aria": "Filtrar por tipo de ultrasonido",
+      "gallery.filter_aria": "Filtrar las fotos",
+      "gallery.filter_face": "Rostro y gestos",
+      "gallery.filter_body": "Cuerpo completo",
       "gallery.viewer_aria": "Visor de la galería",
       "gallery.play": "Reproducir video",
       "gallery.less": "Ver menos",
@@ -482,7 +484,9 @@
       "projects.desc": "Real photos and videos, taken at our clinic.",
       "gallery.more": "View the full gallery",
       "gallery.filter_all": "All",
-      "gallery.filter_aria": "Filter by ultrasound type",
+      "gallery.filter_aria": "Filter the photos",
+      "gallery.filter_face": "Face & gestures",
+      "gallery.filter_body": "Whole body",
       "gallery.viewer_aria": "Gallery viewer",
       "gallery.play": "Play video",
       "gallery.less": "Show less",
@@ -1178,7 +1182,7 @@
     }
   });
 
-  /* ---------- Ultrasound gallery: filters (Todas / 4D / 5D) ----------
+  /* ---------- Ultrasound gallery: filters (Todas / Rostro y gestos / Cuerpo completo) ----------
      "Todas" keeps the folded layout with feature tiles; a type shows all of its
      tiles as a centred grid (the last row sits in the middle, never with holes). */
   var galGridEl = document.getElementById('galGrid');
@@ -1198,7 +1202,9 @@
   }
 
   /* ---------- Ultrasound gallery viewer ----------
-     A black stage that pages through the visible tiles (photos and clips, in
+     A floating card over the dimmed, blurred page (not a full-screen black
+     screen): the picture sits on a dark stage inside it, with its caption
+     below. It pages through the visible tiles (photos and clips, in
      grid order, respecting the filter). Each photo grows from its tile and
      goes back to it on close, at most 1.5× its own pixels so it stays sharp.
      Swipe or arrow keys move; Esc, the X, a tap outside the picture or a
@@ -1238,7 +1244,7 @@
       var dx = (from.left + from.width / 2) - (to.left + to.width / 2), dy = (from.top + from.height / 2) - (to.top + to.height / 2);
       var a = 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')', b = 'translate(0,0) scale(1)';
       var anim = it.el.animate([{ transform: reverse ? b : a }, { transform: reverse ? a : b }], { duration: reverse ? 260 : 340, easing: 'cubic-bezier(.2,.8,.2,1)' });
-      uvEl.animate([{ backgroundColor: reverse ? 'rgba(5,3,4,1)' : 'rgba(5,3,4,0)' }, { backgroundColor: reverse ? 'rgba(5,3,4,0)' : 'rgba(5,3,4,1)' }], { duration: reverse ? 260 : 300, easing: 'ease-out' });
+      uvEl.animate([{ opacity: reverse ? 1 : 0 }, { opacity: reverse ? 0 : 1 }], { duration: reverse ? 240 : 220, easing: 'ease-out' });
       if (done) anim.onfinish = done;
     };
     var load = function(i){
@@ -1335,7 +1341,12 @@
     };
     document.getElementById('uvClose').addEventListener('click', uvClose);
     uvEl.addEventListener('cancel', function(e){ e.preventDefault(); uvClose(); });
-    // A tap on the black stage (not on the picture) closes.
+    // A tap beside the picture, or on the dimmed page around the card, closes.
+    uvEl.addEventListener('click', function(e){
+      if (e.target !== uvEl) return;
+      var r = uvEl.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) uvClose();
+    });
     uvTrack.addEventListener('click', function(e){ if (e.target.classList.contains('uv-slide')) uvClose(); });
     uvTrack.addEventListener('scroll', function(){ requestAnimationFrame(uvSync); }, { passive: true });
     uvPrev.addEventListener('click', function(){ uvGo(uvIndex - 1); });
@@ -1354,12 +1365,12 @@
       drag.dy = Math.max(0, dy);
       var it = uvItems[uvIndex];
       if (it && it.el){ it.el.style.transform = 'translate(0,' + drag.dy + 'px) scale(' + Math.max(.8, 1 - drag.dy / 1200) + ')'; }
-      uvEl.style.backgroundColor = 'rgba(5,3,4,' + Math.max(.25, 1 - drag.dy / 400).toFixed(3) + ')';
+      uvEl.style.opacity = Math.max(.35, 1 - drag.dy / 500).toFixed(3);
     });
     var endDrag = function(){
       if (!drag) return;
       var d = drag; drag = null;
-      uvEl.style.backgroundColor = '';
+      uvEl.style.opacity = '';
       var it = uvItems[uvIndex];
       if (d.on && d.dy > 90){ if (it && it.el) it.el.style.transform = ''; uvClose(); }
       else if (it && it.el){
