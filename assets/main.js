@@ -131,9 +131,13 @@
       "why5": "",
       "why6": "",
       "projects.eyebrow": "Galería",
-      "projects.title": "Así se ve tu bebé en <em>4D y 5D</em>",
+      "projects.title": "Conoce a <em>tu bebé</em>",
       "projects.desc": "Fotos y videos reales, tomados en nuestra clínica.",
       "gallery.more": "Ver toda la galería",
+      "gallery.filter_all": "Todas",
+      "gallery.filter_aria": "Filtrar por tipo de ultrasonido",
+      "gallery.viewer_aria": "Visor de la galería",
+      "gallery.play": "Reproducir video",
       "gallery.less": "Ver menos",
       "projects.view_details": "Ver fotos",
       "proj1.tag": "Ultrasonido",
@@ -474,9 +478,13 @@
       "why5": "",
       "why6": "",
       "projects.eyebrow": "Gallery",
-      "projects.title": "Your baby, in <em>4D and 5D</em>",
+      "projects.title": "Meet <em>your baby</em>",
       "projects.desc": "Real photos and videos, taken at our clinic.",
       "gallery.more": "View the full gallery",
+      "gallery.filter_all": "All",
+      "gallery.filter_aria": "Filter by ultrasound type",
+      "gallery.viewer_aria": "Gallery viewer",
+      "gallery.play": "Play video",
       "gallery.less": "Show less",
       "projects.view_details": "See photos",
       "proj1.tag": "Ultrasound",
@@ -1066,40 +1074,6 @@
       if (e.key === 'ArrowRight'){ e.preventDefault(); go(index + 1); }
       if (e.key === 'ArrowLeft'){ e.preventDefault(); go(index - 1); }
     });
-    /* Large gallery: every photo opens the same viewer, starting at the one tapped. */
-    var galGrid = document.getElementById('galGrid');
-    if (galGrid){
-      galGrid.addEventListener('click', function(e){
-        var btn = e.target.closest('.gal-photo');
-        if (!btn) return;
-        var paths = (galGrid.getAttribute('data-images') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-        var start = parseInt(btn.getAttribute('data-index'), 10) || 0;
-        modalEl.classList.add('is-ultra');
-        descEl.textContent = '';
-        slidesEl.innerHTML = '';
-        dotsEl.innerHTML = '';
-        paths.forEach(function(p, k){
-          var meta = SITE_IMAGES[p] || {};
-          var slide = document.createElement('div');
-          slide.className = 'gallery-slide';
-          var img = document.createElement('img');
-          img.src = p;
-          img.alt = (meta.alt && (meta.alt[currentLang] || meta.alt.es)) || '';
-          img.decoding = 'async';
-          if (Math.abs(k - start) > 1) img.loading = 'lazy';
-          slide.appendChild(img);
-          slidesEl.appendChild(slide);
-        });
-        count = paths.length;
-        noteEl.hidden = true;
-        dotsEl.hidden = true; // too many photos for dots; arrows, swipe and keys move
-        prev.hidden = next.hidden = count < 2;
-        index = -1;
-        gallery.open(btn);
-        slidesEl.scrollLeft = start * slidesEl.clientWidth;
-        sync();
-      });
-    }
     document.querySelectorAll('.area-card[data-project]').forEach(function(card){
       var btn = card.querySelector('.area-open');
       if (!btn) return;
@@ -1168,7 +1142,7 @@
   if (galMore){
     var galFit = function(){
       var grid = document.getElementById('galGrid');
-      if (!grid || grid.classList.contains('is-open')) return;
+      if (!grid || grid.classList.contains('is-open') || grid.classList.contains('is-filtered')) return;
       var folded = [].some.call(grid.children, function(c){ return getComputedStyle(c).display === 'none'; });
       galMore.parentNode.hidden = !folded;
     };
@@ -1203,6 +1177,203 @@
       galMore.querySelector('span').textContent = t(g && g.classList.contains('is-open') ? 'gallery.less' : 'gallery.more');
     }
   });
+
+  /* ---------- Ultrasound gallery: filters (Todas / 4D / 5D) ----------
+     "Todas" keeps the folded layout with feature tiles; a type shows all of its
+     tiles as a centred grid (the last row sits in the middle, never with holes). */
+  var galGridEl = document.getElementById('galGrid');
+  var galTabs = document.querySelectorAll('.gal-tab[data-filter]');
+  if (galGridEl && galTabs.length){
+    galTabs.forEach(function(tab){
+      tab.addEventListener('click', function(){
+        var f = tab.getAttribute('data-filter');
+        galTabs.forEach(function(b){ b.setAttribute('aria-pressed', b === tab ? 'true' : 'false'); });
+        var on = f !== 'all';
+        galGridEl.classList.toggle('is-filtered', on);
+        [].forEach.call(galGridEl.children, function(c){ c.classList.toggle('is-out', on && c.getAttribute('data-cat') !== f); });
+        if (galMore) galMore.parentNode.hidden = on ? true : false;
+        if (!on && typeof galFit === 'function') galFit();
+      });
+    });
+  }
+
+  /* ---------- Ultrasound gallery viewer ----------
+     A black stage that pages through the visible tiles (photos and clips, in
+     grid order, respecting the filter). Each photo grows from its tile and
+     goes back to it on close, at most 1.5× its own pixels so it stays sharp.
+     Swipe or arrow keys move; Esc, the X, a tap outside the picture or a
+     downward swipe (phones) close. Clips play like GIFs while they are the
+     current slide; with reduced motion or Save-Data they wait for a tap. */
+  var uvEl = document.getElementById('ultraViewer');
+  var uv = (uvEl && typeof uvEl.showModal === 'function') ? (function(){
+    var back = null;
+    return {
+      open: function(from){ back = from || document.activeElement; if (!uvEl.open) uvEl.showModal(); root.classList.add('has-sheet'); },
+      close: function(){ if (uvEl.open) uvEl.close(); root.classList.remove('has-sheet'); if (back && back.focus) back.focus({ preventScroll: true }); }
+    };
+  })() : null;
+  if (uv && galGridEl){
+    var uvTrack = document.getElementById('uvTrack');
+    var uvPrev = document.getElementById('uvPrev'), uvNext = document.getElementById('uvNext');
+    var uvCount = document.getElementById('uvCount'), uvTitle = document.getElementById('uvTitle'), uvLive = document.getElementById('uvLive');
+    var uvItems = [], uvIndex = -1, uvSource = null;
+    var containRect = function(box, w, h){
+      var s = Math.min(box.width / w, box.height / h), cw = w * s, ch = h * s;
+      return { left: box.left + (box.width - cw) / 2, top: box.top + (box.height - ch) / 2, width: cw, height: ch };
+    };
+    var mediaRect = function(i){
+      var it = uvItems[i]; if (!it || !it.el) return null;
+      return containRect(it.el.getBoundingClientRect(), it.w, it.h);
+    };
+    var flyFrom = function(i, reverse, done){
+      var it = uvItems[i], to = mediaRect(i);
+      var from = it && it.tile ? it.tile.getBoundingClientRect() : null;
+      var visible = from && from.bottom > 0 && from.top < innerHeight && from.width > 0;
+      if (reduceMotion || !to || !visible || !it.el.animate){
+        var f = uvEl.animate ? uvEl.animate([{ opacity: reverse ? 1 : 0 }, { opacity: reverse ? 0 : 1 }], { duration: reduceMotion ? 1 : 200, easing: 'ease-out' }) : null;
+        if (done){ if (f) f.onfinish = done; else done(); }
+        return;
+      }
+      var s = Math.max(from.width / to.width, from.height / to.height);
+      var dx = (from.left + from.width / 2) - (to.left + to.width / 2), dy = (from.top + from.height / 2) - (to.top + to.height / 2);
+      var a = 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')', b = 'translate(0,0) scale(1)';
+      var anim = it.el.animate([{ transform: reverse ? b : a }, { transform: reverse ? a : b }], { duration: reverse ? 260 : 340, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      uvEl.animate([{ backgroundColor: reverse ? 'rgba(5,3,4,1)' : 'rgba(5,3,4,0)' }, { backgroundColor: reverse ? 'rgba(5,3,4,0)' : 'rgba(5,3,4,1)' }], { duration: reverse ? 260 : 300, easing: 'ease-out' });
+      if (done) anim.onfinish = done;
+    };
+    var load = function(i){
+      var it = uvItems[i]; if (!it || it.loaded) return;
+      it.loaded = true;
+      if (it.type === 'img'){ it.el.src = it.src; }
+      else { it.el.preload = 'auto'; it.el.src = it.src; }
+    };
+    var setPlaying = function(){
+      uvItems.forEach(function(it, k){
+        if (it.type !== 'video') return;
+        if (k === uvIndex && uvEl.open && !stillOnly()){ var p = it.el.play(); if (p && p.catch) p.catch(function(){}); }
+        else if (!it.el.paused) it.el.pause();
+        if (it.playBtn) it.playBtn.hidden = !(k === uvIndex && stillOnly() && it.el.paused);
+      });
+    };
+    var uvSync = function(){
+      var i = Math.round(uvTrack.scrollLeft / Math.max(1, uvTrack.clientWidth));
+      i = Math.max(0, Math.min(uvItems.length - 1, i));
+      if (i === uvIndex) return;
+      uvIndex = i;
+      [i - 1, i, i + 1, i + 2].forEach(load);
+      var it = uvItems[i];
+      uvTitle.textContent = it.alt;
+      uvCount.textContent = (i + 1) + ' / ' + uvItems.length;
+      uvLive.textContent = it.alt + ' — ' + (i + 1) + ' / ' + uvItems.length;
+      uvPrev.disabled = i <= 0; uvNext.disabled = i >= uvItems.length - 1;
+      setPlaying();
+    };
+    var uvGo = function(i){
+      i = Math.max(0, Math.min(uvItems.length - 1, i));
+      uvTrack.scrollTo({ left: i * uvTrack.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+    };
+    var build = function(){
+      uvTrack.innerHTML = '';
+      uvItems = [].filter.call(galGridEl.children, function(c){ return !c.classList.contains('is-out') && (c.classList.contains('gal-photo') || c.classList.contains('gal-video')); }).map(function(tile){
+        var slide = document.createElement('div');
+        slide.className = 'uv-slide';
+        var it = { tile: tile, slide: slide };
+        if (tile.classList.contains('gal-photo')){
+          var im = tile.querySelector('img');
+          it.type = 'img'; it.src = tile.getAttribute('data-path') || im.currentSrc || im.src;
+          it.alt = im.alt; it.w = +im.getAttribute('width') || 4; it.h = +im.getAttribute('height') || 5;
+          it.el = document.createElement('img'); it.el.alt = it.alt; it.el.decoding = 'async';
+        } else {
+          var tv = tile.querySelector('video'), srcEl = tv.querySelector('source');
+          it.type = 'video'; it.src = srcEl ? srcEl.getAttribute('src') : tv.currentSrc;
+          it.alt = tv.getAttribute('aria-label') || ''; it.w = +tv.getAttribute('width') || 4; it.h = +tv.getAttribute('height') || 5;
+          var v = document.createElement('video');
+          v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('muted', '');
+          v.disablePictureInPicture = true; v.preload = 'none'; v.poster = tv.getAttribute('poster') || '';
+          v.setAttribute('aria-label', it.alt);
+          it.el = v;
+          var pb = document.createElement('button');
+          pb.type = 'button'; pb.className = 'uv-play'; pb.hidden = true;
+          pb.setAttribute('aria-label', t('gallery.play'));
+          pb.addEventListener('click', function(e){ e.stopPropagation(); var p = v.play(); if (p && p.catch) p.catch(function(){}); pb.hidden = true; });
+          it.playBtn = pb;
+        }
+        it.el.className = 'uv-media';
+        // At most 1.5x the picture's own pixels: sharp, and never a blurry blow-up.
+        it.el.style.setProperty('--mw', Math.round(it.w * 1.5) + 'px');
+        it.el.style.setProperty('--mh', Math.round(it.h * 1.5) + 'px');
+        slide.appendChild(it.el);
+        if (it.playBtn) slide.appendChild(it.playBtn);
+        uvTrack.appendChild(slide);
+        return it;
+      });
+    };
+    galGridEl.addEventListener('click', function(e){
+      var tile = e.target.closest('.gal-photo, .gal-video');
+      if (!tile || !galGridEl.contains(tile)) return;
+      uvSource = tile;
+      build();
+      var start = Math.max(0, uvItems.findIndex(function(it){ return it.tile === tile; }));
+      uvIndex = -1;
+      uv.open(tile);
+      uvTrack.scrollLeft = start * uvTrack.clientWidth;
+      load(start);
+      uvSync();
+      requestAnimationFrame(function(){ flyFrom(start, false); uvTrack.focus({ preventScroll: true }); });
+    });
+    var closing = false;
+    var uvClose = function(){
+      if (closing || !uvEl.open) return;
+      closing = true;
+      var i = uvIndex;
+      uvItems.forEach(function(it){ if (it.type === 'video' && !it.el.paused) it.el.pause(); });
+      flyFrom(i, true, function(){
+        uv.close();
+        closing = false;
+        uvItems.forEach(function(it){ if (it.el) it.el.style.transform = ''; });
+      });
+    };
+    document.getElementById('uvClose').addEventListener('click', uvClose);
+    uvEl.addEventListener('cancel', function(e){ e.preventDefault(); uvClose(); });
+    // A tap on the black stage (not on the picture) closes.
+    uvTrack.addEventListener('click', function(e){ if (e.target.classList.contains('uv-slide')) uvClose(); });
+    uvTrack.addEventListener('scroll', function(){ requestAnimationFrame(uvSync); }, { passive: true });
+    uvPrev.addEventListener('click', function(){ uvGo(uvIndex - 1); });
+    uvNext.addEventListener('click', function(){ uvGo(uvIndex + 1); });
+    uvEl.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight'){ e.preventDefault(); uvGo(uvIndex + 1); }
+      else if (e.key === 'ArrowLeft'){ e.preventDefault(); uvGo(uvIndex - 1); }
+    });
+    // Phones: drag the picture down to close; a short drag springs back.
+    var drag = null;
+    uvTrack.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') return; drag = { x: e.clientX, y: e.clientY, dy: 0, on: false }; });
+    uvTrack.addEventListener('pointermove', function(e){
+      if (!drag) return;
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.on){ if (dy > 12 && dy > Math.abs(dx) * 1.3) drag.on = true; else if (Math.abs(dx) > 12) { drag = null; return; } else return; }
+      drag.dy = Math.max(0, dy);
+      var it = uvItems[uvIndex];
+      if (it && it.el){ it.el.style.transform = 'translate(0,' + drag.dy + 'px) scale(' + Math.max(.8, 1 - drag.dy / 1200) + ')'; }
+      uvEl.style.backgroundColor = 'rgba(5,3,4,' + Math.max(.25, 1 - drag.dy / 400).toFixed(3) + ')';
+    });
+    var endDrag = function(){
+      if (!drag) return;
+      var d = drag; drag = null;
+      uvEl.style.backgroundColor = '';
+      var it = uvItems[uvIndex];
+      if (d.on && d.dy > 90){ if (it && it.el) it.el.style.transform = ''; uvClose(); }
+      else if (it && it.el){
+        if (it.el.animate && d.on) it.el.animate([{ transform: it.el.style.transform }, { transform: 'translate(0,0) scale(1)' }], { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        it.el.style.transform = '';
+      }
+    };
+    uvTrack.addEventListener('pointerup', endDrag);
+    uvTrack.addEventListener('pointercancel', endDrag);
+    uvEl.addEventListener('close', function(){ uvItems.forEach(function(it){ if (it.type === 'video' && !it.el.paused) it.el.pause(); }); });
+    langListeners.push(function(){
+      document.querySelectorAll('.uv-play').forEach(function(b){ b.setAttribute('aria-label', t('gallery.play')); });
+    });
+  }
 
   /* ---------- Service details: a sheet anchored to the card that opened it ---------- */
   var serviceSheet = sheet(document.getElementById('serviceModal'));
