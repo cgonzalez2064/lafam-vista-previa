@@ -926,3 +926,59 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 @media (max-width: 619px) { .hero-brand-card { max-width: 220px; margin-inline: auto; } }
 @media (min-width: 620px) { .areas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1100px) { .areas-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* ======================== Ultrasound gallery & clips ========================
+   Masonry columns keep every ultrasound whole (no cropping). Tiles are never
+   wider than the photos themselves (WhatsApp exports, ~400-900 px), so they
+   stay sharp on phones and retina screens. */
+.gal-grid { columns: 2; column-gap: 10px; margin-top: 8px; }
+@media (min-width: 720px) { .gal-grid { columns: 3; column-gap: 14px; } }
+@media (min-width: 1100px) { .gal-grid { columns: 4; column-gap: 16px; } }
+.gal-item { display: block; width: 100%; margin: 0 0 10px; padding: 0; border: 0; border-radius: 18px; overflow: hidden; background: #0b0508; break-inside: avoid; position: relative; box-shadow: var(--shadow-sm, 0 1px 2px rgba(42, 20, 36, .08)); -webkit-tap-highlight-color: transparent; }
+@media (min-width: 720px) { .gal-item { margin-bottom: 14px; border-radius: 20px; } }
+@media (min-width: 1100px) { .gal-item { margin-bottom: 16px; } }
+.gal-item img, .gal-item video { display: block; width: 100%; height: auto; }
+.gal-photo { cursor: zoom-in; }
+.gal-photo img { transition: transform 600ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
+@media (hover: hover) { .gal-photo:hover img { transform: scale(1.04); } }
+.gal-photo:active { transform: scale(.98); transition: transform 100ms ease-out; }
+.gal-photo:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.gal-video::after { content: ""; position: absolute; top: 10px; left: 10px; width: 10px; height: 10px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, .25); opacity: .9; }
+.gal-grid:not(.is-open) .is-more { display: none; }
+.gal-more { display: flex; justify-content: center; margin-top: 18px; }
+.gal-grid.is-open + .gal-more svg { transform: rotate(-90deg); }
+.gal-more svg { transform: rotate(90deg); transition: transform 200ms ease; }
+
+/* Viewer: show each ultrasound whole on black, at most its own size. */
+.sheet-gallery .gallery-media, .sheet-gallery .gallery-slides { background: #0b0508; }
+.sheet-gallery .gallery-slide { height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.sheet-gallery .gallery-slide img { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
+/* Phones: the viewer is a full-screen black stage; the caption stays small. */
+@media (max-width: 899px) {
+  .sheet-gallery { background: #0b0508; }
+  .sheet-gallery .gallery-media { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .sheet-gallery .gallery-slides { flex: 1; min-height: 0; aspect-ratio: auto; }
+  .sheet-gallery .gallery-body { padding: 14px 20px calc(18px + env(safe-area-inset-bottom)); background: #0b0508; }
+  .sheet-gallery .gallery-body h3 { color: #fff; font-size: 1.1rem; }
+  .sheet-gallery .gallery-body .tag { justify-self: start; }
+}
+.sheet-gallery #galleryDesc:empty { display: none; }
+
+/* Hero clip: plays like a moving photo in the main tile. */
+.hero-video { background: #0b0508; }
+.hero-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Phones: the clip leads, full width; the two photos sit side by side below. */
+@media (max-width: 899px) {
+  .hero-art { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hero-photo.hero-video { grid-column: 1 / -1; aspect-ratio: 9 / 10; max-width: 560px; width: 100%; justify-self: center; border-radius: 24px; }
+  .hero-photo.p2, .hero-photo.p3 { aspect-ratio: 4 / 5; border-radius: 20px; }
+}
+/* Larger screens: a slightly taller stack so the clip reads first. */
+@media (min-width: 900px) {
+  .hero-photo.hero-video { width: 70%; aspect-ratio: 9 / 10; right: 4%; top: 2%; }
+  .hero-photo.p2 { width: 42%; }
+  .hero-photo.p3 { width: 36%; }
+}
+.sheet-gallery .gallery-body .tag { justify-self: start; }
+@media (min-width: 900px) { .sheet-gallery.is-open { height: fit-content; } .sheet-gallery .gallery-body { padding-bottom: 22px; } }

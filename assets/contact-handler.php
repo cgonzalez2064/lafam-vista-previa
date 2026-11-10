@@ -93,7 +93,7 @@ function sensumCmsApp(): ?\Sensum\Cms\App {
         return $app;
     }
     $app = null;
-    foreach ([(string) getenv('SENSUM_CMS_DIR'), dirname(__DIR__, 2) . '/renacer-cms', dirname(__DIR__) . '/cms'] as $dir) {
+    foreach ([(string) getenv('SENSUM_CMS_DIR'), (string) getenv('REDIRECT_SENSUM_CMS_DIR'), dirname(__DIR__, 2) . '/renacer-cms', dirname(__DIR__) . '/cms'] as $dir) {
         if ($dir !== '' && is_file($dir . '/bootstrap.php') && is_file($dir . '/vendor/autoload.php')) {
             try {
                 $app = require $dir . '/bootstrap.php';

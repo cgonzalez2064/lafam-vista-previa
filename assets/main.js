@@ -133,6 +133,8 @@
       "projects.eyebrow": "Galería",
       "projects.title": "Diferentes ultrasonidos",
       "projects.desc": "Todas las fotos y videos fueron tomadas en nuestra clínica.",
+      "gallery.more": "Ver más ultrasonidos",
+      "gallery.less": "Ver menos",
       "projects.view_details": "Ver fotos",
       "proj1.tag": "Ultrasonido",
       "proj1.title": "Ultrasonido 4D",
@@ -474,6 +476,8 @@
       "projects.eyebrow": "Gallery",
       "projects.title": "Different ultrasounds",
       "projects.desc": "All photos and videos were taken at our clinic.",
+      "gallery.more": "See more ultrasounds",
+      "gallery.less": "See less",
       "projects.view_details": "See photos",
       "proj1.tag": "Ultrasound",
       "proj1.title": "4D ultrasound",
@@ -1055,6 +1059,41 @@
       if (e.key === 'ArrowRight'){ e.preventDefault(); go(index + 1); }
       if (e.key === 'ArrowLeft'){ e.preventDefault(); go(index - 1); }
     });
+    /* Large gallery: every photo opens the same viewer, starting at the one tapped. */
+    var galGrid = document.getElementById('galGrid');
+    if (galGrid){
+      galGrid.addEventListener('click', function(e){
+        var btn = e.target.closest('.gal-photo');
+        if (!btn) return;
+        var paths = (galGrid.getAttribute('data-images') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+        var start = parseInt(btn.getAttribute('data-index'), 10) || 0;
+        tagEl.textContent = t('projects.eyebrow');
+        titleEl.textContent = t('projects.title');
+        descEl.textContent = '';
+        slidesEl.innerHTML = '';
+        dotsEl.innerHTML = '';
+        paths.forEach(function(p, k){
+          var meta = SITE_IMAGES[p] || {};
+          var slide = document.createElement('div');
+          slide.className = 'gallery-slide';
+          var img = document.createElement('img');
+          img.src = p;
+          img.alt = (meta.alt && (meta.alt[currentLang] || meta.alt.es)) || '';
+          img.decoding = 'async';
+          if (Math.abs(k - start) > 1) img.loading = 'lazy';
+          slide.appendChild(img);
+          slidesEl.appendChild(slide);
+        });
+        count = paths.length;
+        noteEl.hidden = true;
+        dotsEl.hidden = true; // too many photos for dots; arrows, swipe and keys move
+        prev.hidden = next.hidden = count < 2;
+        index = -1;
+        gallery.open(btn);
+        slidesEl.scrollLeft = start * slidesEl.clientWidth;
+        sync();
+      });
+    }
     document.querySelectorAll('.area-card[data-project]').forEach(function(card){
       var btn = card.querySelector('.area-open');
       if (!btn) return;
@@ -1103,6 +1142,49 @@
       });
     });
   }
+
+  /* ---------- Gallery "see more" and the ultrasound clips ----------
+     Clips are muted loops. The hero clip starts at once; gallery clips load
+     nothing until they scroll into view and pause when they leave it. With
+     reduced motion or Save-Data on, only the poster frame shows. */
+  var galMore = document.getElementById('galMore');
+  if (galMore){
+    galMore.addEventListener('click', function(){
+      var grid = document.getElementById('galGrid');
+      var open = grid.classList.toggle('is-open');
+      galMore.setAttribute('aria-expanded', open ? 'true' : 'false');
+      galMore.querySelector('span').textContent = t(open ? 'gallery.less' : 'gallery.more');
+      galMore.querySelector('span').setAttribute('data-i18n', open ? 'gallery.less' : 'gallery.more');
+      if (!open) grid.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  }
+  var saveData = !!(navigator.connection && navigator.connection.saveData);
+  var stillOnly = function(){ return reduceMotion || saveData || document.documentElement.classList.contains('a11y-motion'); };
+  var tryPlay = function(v){ if (stillOnly()) return; var p = v.play(); if (p && p.catch) p.catch(function(){}); };
+  document.querySelectorAll('video[data-autoplay]').forEach(function(v){
+    if (stillOnly()) { v.preload = 'none'; return; }
+    v.autoplay = true; tryPlay(v);
+  });
+  var inview = document.querySelectorAll('video[data-inview]');
+  if (inview.length && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        var v = en.target;
+        if (en.isIntersecting){ if (v.preload === 'none') v.preload = 'auto'; tryPlay(v); }
+        else if (!v.paused) v.pause();
+      });
+    }, { rootMargin: '200px 0px', threshold: 0.25 });
+    inview.forEach(function(v){ io.observe(v); });
+  }
+  langListeners.push(function(){
+    document.querySelectorAll('video[data-i18n-aria-es]').forEach(function(v){
+      v.setAttribute('aria-label', v.getAttribute(currentLang === 'en' ? 'data-i18n-aria-en' : 'data-i18n-aria-es'));
+    });
+    if (galMore){
+      var g = document.getElementById('galGrid');
+      galMore.querySelector('span').textContent = t(g && g.classList.contains('is-open') ? 'gallery.less' : 'gallery.more');
+    }
+  });
 
   /* ---------- Service details: a sheet anchored to the card that opened it ---------- */
   var serviceSheet = sheet(document.getElementById('serviceModal'));
