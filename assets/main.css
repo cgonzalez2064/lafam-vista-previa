@@ -1069,3 +1069,13 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 /* Hero: give the bento room beside the headline. */
 @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr 1fr; gap: 56px; } }
 @media (hover: hover) { .hero-photo img { transition: transform 600ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); } .hero-photo:hover img { transform: scale(1.03); } }
+
+/* First-screen fact: the 4D and 5D prices, quiet, under the buttons. */
+.hero-prices { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 20px 0 0; padding: 0; }
+.hero-prices a { display: inline-flex; align-items: baseline; gap: 8px; min-height: 40px; align-items: center; padding: 0 14px; border-radius: 999px; font-size: .9rem; color: var(--text-2); text-decoration: none; background: color-mix(in srgb, var(--surface, #fff) 70%, transparent); box-shadow: 0 0 0 1px rgba(42, 10, 30, .08); transition: background-color 200ms ease, transform 100ms ease-out; }
+.hero-prices a:hover { background: var(--surface, #fff); }
+.hero-prices a:active { transform: scale(.97); }
+.hero-prices strong { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (max-width: 559px) { .hero-prices { gap: 6px; } .hero-prices a { font-size: .78rem; padding: 0 11px; gap: 6px; white-space: nowrap; } }
+@media (max-width: 399px) { .gal-tab { padding: 0 8px; font-size: .8rem; } .gal-filter { gap: 2px; padding: 4px; } }
+@media (max-width: 359px) { .hero-ctas .btn { font-size: .95rem; padding-inline: 16px; white-space: normal; } }
