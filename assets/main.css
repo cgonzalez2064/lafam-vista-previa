@@ -665,26 +665,26 @@ button[type="submit"]:disabled { opacity: .6; cursor: progress; }
    Real photography, quick facts and the hospital's own features (v8)
    ========================================================================== */
 
-/* Hero collage: the hospital's photos, layered like prints on a table.
-   Phones: a row of three; tablets and up: an overlapping stack. */
-.hero-art { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: -4px; }
-.hero-photo { margin: 0; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-md); background: var(--surface-2); aspect-ratio: 3 / 4; }
-.hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+/* Hero: a bento of the clinic's ultrasounds. One tall photo and two squares
+   stacked beside it, same gap and radius, no frames. The tiles are dark, like the
+   ultrasound renders themselves, so any black in a photo reads as part of it. */
+.hero-art { position: relative; display: grid; grid-template-columns: 1.6fr 1fr; grid-template-rows: auto auto; gap: 12px; margin: 0; }
+.hero-photo { position: relative; margin: 0; border-radius: 22px; overflow: hidden; background: #0b0508; aspect-ratio: 1; isolation: isolate;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 0 0 1px rgba(42, 10, 30, .06), 0 24px 48px -24px rgba(120, 10, 70, .35); }
+.hero-photo.p1 { grid-row: 1 / span 2; aspect-ratio: auto; }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-photo.p1 img { object-position: 35% 40%; }
 .hero-wing { display: none; }
 @media (min-width: 900px) {
-  .hero-art { display: block; height: 560px; margin: 0; }
-  .hero-photo { position: absolute; border-radius: 30px; box-shadow: var(--shadow-lg); border: 6px solid var(--surface); }
-  .hero-photo.p1 { width: 66%; aspect-ratio: 4 / 5; right: 6%; top: 4%; z-index: 2; }
-  .hero-photo.p2 { width: 40%; aspect-ratio: 4 / 5; left: 0; bottom: 0; z-index: 3; }
-  .hero-photo.p3 { width: 34%; aspect-ratio: 1; right: 0; bottom: 2%; z-index: 1; }
-  .hero-wing { display: block; position: absolute; left: 2%; top: 0; width: 120px; height: 140px; z-index: 4; background: url("img/brand/mark.webp") center / contain no-repeat; filter: drop-shadow(0 18px 24px rgba(201, 17, 128, .28)); }
+  .hero-art { gap: 16px; max-width: 560px; margin-left: auto; width: 100%; }
+  .hero-photo { border-radius: 28px; }
+  .hero-photo.p1 { border-radius: 32px; }
 }
 /* Entrance: each print settles into place, once (Ken Burns on the main photo). */
 .js-motion .hero-photo { animation: print-in 900ms var(--ease-out) both; }
 .js-motion .hero-photo.p2 { animation-delay: 140ms; }
 .js-motion .hero-photo.p3 { animation-delay: 260ms; }
 .js-motion .hero-photo.p1 img { animation: kenburns 2.4s var(--ease-out) both; }
-.js-motion .hero-wing { animation: wing-in 1.1s 300ms var(--ease-out) both; }
 @keyframes print-in { from { opacity: 0; transform: translateY(28px) scale(.96); } to { opacity: 1; transform: none; } }
 @keyframes kenburns { from { transform: scale(1.12); } to { transform: scale(1); } }
 @keyframes wing-in { from { opacity: 0; transform: translate(-16px, 12px) rotate(-8deg) scale(.9); } to { opacity: 1; transform: none; } }
@@ -936,20 +936,20 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
    exactly with 2, 3 or 4 columns). Photos fill their tile (object-fit: cover); the
    whole photo opens in the viewer. Frames match the hero collage: white border,
    soft shadow, generous radius. Collapsed: 3 rows (feature + the next tiles). */
-.gal-grid { --gap: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: var(--gap); margin-top: 8px; }
-@media (min-width: 720px) { .gal-grid { --gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 1100px) { .gal-grid { --gap: 20px; grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.gal-item { display: block; aspect-ratio: 4 / 5; min-width: 0; margin: 0; padding: 0; border: 3px solid var(--surface, #fff); border-radius: 18px; overflow: hidden; background: #0b0508; position: relative; isolation: isolate; box-shadow: var(--shadow-md, 0 10px 30px -12px rgba(42, 20, 36, .3)); -webkit-tap-highlight-color: transparent; }
+.gal-grid { --gap: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: var(--gap); margin-top: 8px; }
+@media (min-width: 720px) { .gal-grid { --gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .gal-grid { --gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.gal-item { display: block; aspect-ratio: 4 / 5; min-width: 0; margin: 0; padding: 0; border: 0; border-radius: 20px; overflow: hidden; background: #0b0508; position: relative; isolation: isolate; box-shadow: 0 0 0 1px rgba(42, 10, 30, .06), 0 10px 30px -18px rgba(120, 10, 70, .35); transition: transform 240ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)), box-shadow 240ms ease; -webkit-tap-highlight-color: transparent; }
 .gal-feature { grid-column: span 2; aspect-ratio: 1 / 1; }
 @media (min-width: 720px) { .gal-feature { grid-row: span 2; aspect-ratio: auto; } .gal-feature-r { grid-column: 2 / span 2; } }
 @media (min-width: 1100px) { .gal-feature-r { grid-column: 3 / span 2; } }
-@media (min-width: 720px) { .gal-item { border-width: 5px; border-radius: 24px; } .gal-feature { border-radius: 30px; } }
+@media (min-width: 720px) { .gal-feature { border-radius: 28px; } }
 .gal-item img, .gal-item video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.gal-photo { cursor: zoom-in; transition: transform 160ms var(--ease-out, ease-out); }
-.gal-photo img { transition: transform 700ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
-@media (hover: hover) { .gal-photo:hover img { transform: scale(1.045); } }
-.gal-photo:active { transform: scale(.98); transition-duration: 100ms; }
-.gal-photo:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.gal-photo, .gal-anim { cursor: zoom-in; }
+.gal-item img { transition: transform 600ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
+@media (hover: hover) { .gal-item:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(42, 10, 30, .08), 0 18px 40px -18px rgba(120, 10, 70, .45); } .gal-item:hover img { transform: scale(1.03); } }
+.gal-item:active { transform: scale(.985); transition-duration: 100ms; }
+.gal-item:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .gal-chip { position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; border-radius: 999px; font-size: .75rem; font-weight: 600; letter-spacing: .01em; color: #fff; background: rgba(20, 8, 16, .55); -webkit-backdrop-filter: blur(12px) saturate(160%); backdrop-filter: blur(12px) saturate(160%); pointer-events: none; }
 @media (prefers-reduced-transparency: reduce) { .gal-chip { background: rgba(20, 8, 16, .9); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 /* Collapsed: phones feature + 4 tiles; tablets feature + 5; computers feature + 8. */
@@ -975,40 +975,6 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
   .sheet-gallery .gallery-body .tag { justify-self: start; }
 }
 .sheet-gallery #galleryDesc:empty { display: none; }
-
-/* Hero collage: the sharpest photo leads (5:6, its own shape, so nothing is cut);
-   two smaller ones overlap it. Phones: the lead photo full width, the two others
-   side by side below. */
-@media (max-width: 899px) {
-  .hero-art { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .hero-photo.p1 { grid-column: 1 / -1; aspect-ratio: 5 / 6; max-width: 520px; width: 100%; justify-self: center; border-radius: 24px; }
-  .hero-photo.p2, .hero-photo.p3 { aspect-ratio: 4 / 5; border-radius: 20px; }
-}
-@media (min-width: 900px) {
-  .hero-photo.p1 { width: 64%; aspect-ratio: 5 / 6; right: 6%; top: 0; }
-  .hero-photo.p2 { width: 40%; aspect-ratio: 4 / 5; }
-  .hero-photo.p3 { width: 34%; }
-}
-.sheet-gallery .gallery-body .tag { justify-self: start; }
-}
-.sheet-gallery #galleryDesc:empty { display: none; }
-
-/* Hero clip: plays like a moving photo in the main tile. */
-.hero-video { background: #0b0508; }
-.hero-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-/* Phones: the clip leads, full width; the two photos sit side by side below. */
-@media (max-width: 899px) {
-  .hero-art { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .hero-photo.hero-video { grid-column: 1 / -1; aspect-ratio: 9 / 10; max-width: 560px; width: 100%; justify-self: center; border-radius: 24px; }
-  .hero-photo.p2, .hero-photo.p3 { aspect-ratio: 4 / 5; border-radius: 20px; }
-}
-/* Larger screens: a slightly taller stack so the clip reads first. */
-@media (min-width: 900px) {
-  .hero-photo.hero-video { width: 70%; aspect-ratio: 9 / 10; right: 4%; top: 2%; }
-  .hero-photo.p2 { width: 42%; }
-  .hero-photo.p3 { width: 36%; }
-}
 .sheet-gallery .gallery-body .tag { justify-self: start; }
 @media (min-width: 900px) { .sheet-gallery.is-open { height: fit-content; } .sheet-gallery .gallery-body { padding-bottom: 22px; } }
 
@@ -1041,7 +1007,7 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 @media (min-width: 1100px) { .gal-grid.is-filtered > * { flex-basis: calc((100% - 3 * var(--gap)) / 4); } }
 .gal-grid.is-filtered > .is-out { display: none; }
 .gal-grid.is-filtered .gal-feature { aspect-ratio: 4 / 5; border-radius: inherit; }
-@media (min-width: 720px) { .gal-grid.is-filtered .gal-feature { border-radius: 24px; } }
+@media (min-width: 720px) { .gal-grid.is-filtered .gal-feature { border-radius: 20px; } }
 .js-motion .gal-grid.is-filtered > :not(.is-out) { animation: gal-in 360ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)) both; }
 @keyframes gal-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
 .gal-video { cursor: zoom-in; }
@@ -1052,8 +1018,6 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 .gal-item video::-webkit-media-controls-start-playback-button, .gal-item video::-webkit-media-controls-overlay-play-button,
 .uv-media::-webkit-media-controls, .uv-media::-webkit-media-controls-panel,
 .uv-media::-webkit-media-controls-start-playback-button, .uv-media::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }
-@media (hover: hover) { .gal-video:hover video { transform: scale(1.045); } }
-.gal-video video { transition: transform 700ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); }
 .gal-video:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
 /* ======================== Gallery viewer ========================
@@ -1061,15 +1025,15 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
    (ultrasounds are rendered on black) and a light caption bar below. Never a
    full-screen black screen; the page stays visible around it. */
 .uv { position: fixed; inset: 0; margin: auto; padding: 0; border: 0; overflow: hidden; color: var(--text);
-  width: min(920px, calc(100vw - 24px)); height: min(860px, calc(100dvh - 48px));
+  width: min(880px, calc(100vw - 48px)); height: min(820px, calc(100dvh - 64px));
   max-width: none; max-height: none; border-radius: 28px; background: var(--surface, #fff);
   box-shadow: 0 30px 80px -20px rgba(42, 10, 30, .45), 0 0 0 1px rgba(255, 255, 255, .5); }
 .uv::backdrop { background: rgba(38, 14, 30, .5); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); }
 @media (prefers-reduced-transparency: reduce) { .uv::backdrop { background: rgba(38, 14, 30, .82); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 /* Phones: the card hugs the picture (ultrasounds are about 4:5) instead of the whole screen. */
-@media (max-width: 719px) { .uv { width: calc(100vw - 24px); height: min(calc(100dvh - 40px), calc((100vw - 40px) * 1.25 + 92px)); border-radius: 24px; } }
+@media (max-width: 719px) { .uv { width: calc(100vw - 24px); height: min(calc(100dvh - 40px), calc((100vw - 40px) * 1.25 + 16px)); border-radius: 24px; } }
 .uv:focus { outline: none; }
-.uv-track { position: absolute; inset: 8px 8px 76px; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; touch-action: pan-x pinch-zoom; outline: none; border-radius: 21px; background: #0b0508; }
+.uv-track { position: absolute; inset: 8px; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; touch-action: pan-x pinch-zoom; outline: none; border-radius: 21px; background: #0b0508; }
 @media (max-width: 719px) { .uv-track { border-radius: 18px; } }
 .uv-track::-webkit-scrollbar { display: none; }
 .uv-slide { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; display: grid; place-items: center; padding: 8px; position: relative; }
@@ -1083,16 +1047,16 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 .uv-nav:active, .uv-close:active { transform: scale(.92); }
 .uv-nav:focus-visible, .uv-close:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .uv-nav svg, .uv-close svg { width: 22px; height: 22px; }
-.uv-nav { top: calc(50% - 34px); translate: 0 -50%; }
+.uv-nav { top: 50%; translate: 0 -50%; }
 .uv-nav.prev { left: 22px; } .uv-nav.prev svg { transform: scaleX(-1); }
 .uv-nav.next { right: 22px; }
 .uv-nav:disabled { opacity: 0; pointer-events: none; }
 @media (max-width: 899px), (hover: none) { .uv-nav { display: none; } }
 .uv-close { top: 18px; right: 18px; width: 40px; height: 40px; }
 .uv-close svg { width: 18px; height: 18px; }
-.uv-caption { position: absolute; left: 0; right: 0; bottom: 0; height: 76px; padding: 0 22px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; text-align: left; }
-.uv-count { flex: none; padding: 4px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; font-variant-numeric: tabular-nums; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
-.uv-title { margin: 0; font-size: .95rem; line-height: 1.35; color: var(--text); font-weight: 500; max-width: 60ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.uv-caption { position: absolute; left: 20px; top: 20px; z-index: 2; pointer-events: none; }
+.uv-count { display: inline-block; padding: 6px 12px; border-radius: 999px; font-size: .8rem; font-weight: 600; font-variant-numeric: tabular-nums; color: #fff; background: rgba(255, 255, 255, .14); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.uv-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .uv.is-open { animation: none; }
 
 /* Phones: the three filters share the width evenly on one line; counts drop below 480 px. */
@@ -1101,3 +1065,7 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
   .gal-tab { padding: 0 12px; font-size: .875rem; white-space: nowrap; justify-content: center; }
 }
 @media (max-width: 479px) { .gal-tab .gal-count { display: none; } }
+
+/* Hero: give the bento room beside the headline. */
+@media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr 1fr; gap: 56px; } }
+@media (hover: hover) { .hero-photo img { transition: transform 600ms var(--ease-out, cubic-bezier(.2, .8, .2, 1)); } .hero-photo:hover img { transform: scale(1.03); } }

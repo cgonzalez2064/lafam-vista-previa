@@ -1201,6 +1201,23 @@
     });
   }
 
+  /* ---------- Gallery clips as animated images ----------
+     The still poster loads first; once a clip tile is on screen (and the visitor
+     has not asked for less motion or less data) the animated WebP takes over. */
+  var anims = document.querySelectorAll('img[data-anim]');
+  if (anims.length && !stillOnly()){
+    var startAnim = function(im){ if (im.getAttribute('src') !== im.getAttribute('data-anim')) im.setAttribute('src', im.getAttribute('data-anim')); };
+    if ('IntersectionObserver' in window){
+      var aio = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if (en.isIntersecting){ startAnim(en.target); aio.unobserve(en.target); } });
+      }, { rootMargin: '200px 0px' });
+      anims.forEach(function(im){ aio.observe(im); });
+    } else anims.forEach(startAnim);
+  }
+  langListeners.push(function(){
+    document.querySelectorAll('img[data-i18n-alt-es]').forEach(function(im){ im.alt = im.getAttribute(currentLang === 'en' ? 'data-i18n-alt-en' : 'data-i18n-alt-es'); });
+  });
+
   /* ---------- Ultrasound gallery viewer ----------
      A floating card over the dimmed, blurred page (not a full-screen black
      screen): the picture sits on a dark stage inside it, with its caption
@@ -1280,13 +1297,16 @@
     };
     var build = function(){
       uvTrack.innerHTML = '';
-      uvItems = [].filter.call(galGridEl.children, function(c){ return !c.classList.contains('is-out') && (c.classList.contains('gal-photo') || c.classList.contains('gal-video')); }).map(function(tile){
+      uvItems = [].filter.call(galGridEl.children, function(c){ return !c.classList.contains('is-out') && (c.classList.contains('gal-photo') || c.classList.contains('gal-video') || c.classList.contains('gal-anim')); }).map(function(tile){
         var slide = document.createElement('div');
         slide.className = 'uv-slide';
         var it = { tile: tile, slide: slide };
-        if (tile.classList.contains('gal-photo')){
+        if (tile.classList.contains('gal-photo') || tile.classList.contains('gal-anim')){
           var im = tile.querySelector('img');
-          it.type = 'img'; it.src = tile.getAttribute('data-path') || im.currentSrc || im.src;
+          it.type = 'img';
+          it.src = tile.classList.contains('gal-anim')
+            ? (stillOnly() ? im.getAttribute('src') : im.getAttribute('data-anim'))
+            : (tile.getAttribute('data-path') || im.currentSrc || im.src);
           it.alt = im.alt; it.w = +im.getAttribute('width') || 4; it.h = +im.getAttribute('height') || 5;
           it.el = document.createElement('img'); it.el.alt = it.alt; it.el.decoding = 'async';
         } else {
@@ -1315,7 +1335,7 @@
       });
     };
     galGridEl.addEventListener('click', function(e){
-      var tile = e.target.closest('.gal-photo, .gal-video');
+      var tile = e.target.closest('.gal-photo, .gal-video, .gal-anim');
       if (!tile || !galGridEl.contains(tile)) return;
       uvSource = tile;
       build();
