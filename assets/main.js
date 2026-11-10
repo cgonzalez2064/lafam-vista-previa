@@ -1038,6 +1038,7 @@
     var prev = document.getElementById('galleryPrev');
     var next = document.getElementById('galleryNext');
     var index = 0, count = 0;
+    var modalEl = document.getElementById('galleryModal');
     var go = function(i){
       i = Math.max(0, Math.min(count - 1, i));
       var w = slidesEl.clientWidth;
@@ -1051,6 +1052,12 @@
       prev.disabled = i <= 0;
       next.disabled = i >= count - 1;
       liveEl.textContent = count > 1 ? fmt(t('projects.modal_image_of'), { n: i + 1, total: count }) : '';
+      // Ultrasound gallery: the caption is the photo itself (its description) and its place.
+      if (modalEl.classList.contains('is-ultra')){
+        var cur = slidesEl.children[i] && slidesEl.children[i].querySelector('img');
+        titleEl.textContent = (cur && cur.alt) || t('projects.title').replace(/<[^>]+>/g, '');
+        tagEl.textContent = (i + 1) + ' / ' + count;
+      }
     };
     slidesEl.addEventListener('scroll', function(){ requestAnimationFrame(sync); }, { passive: true });
     prev.addEventListener('click', function(){ go(index - 1); });
@@ -1067,8 +1074,7 @@
         if (!btn) return;
         var paths = (galGrid.getAttribute('data-images') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
         var start = parseInt(btn.getAttribute('data-index'), 10) || 0;
-        tagEl.textContent = t('projects.eyebrow');
-        titleEl.textContent = t('projects.title').replace(/<[^>]+>/g, '');
+        modalEl.classList.add('is-ultra');
         descEl.textContent = '';
         slidesEl.innerHTML = '';
         dotsEl.innerHTML = '';
@@ -1098,6 +1104,7 @@
       var btn = card.querySelector('.area-open');
       if (!btn) return;
       btn.addEventListener('click', function(){
+        document.getElementById('galleryModal').classList.remove('is-ultra');
         var pid = card.getAttribute('data-project');
         var title = t(pid + '.title');
         var paths = (card.getAttribute('data-images') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);

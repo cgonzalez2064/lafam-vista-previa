@@ -994,3 +994,16 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 }
 .sheet-gallery .gallery-body .tag { justify-self: start; }
 @media (min-width: 900px) { .sheet-gallery.is-open { height: fit-content; } .sheet-gallery .gallery-body { padding-bottom: 22px; } }
+
+/* Ultrasound gallery viewer: a dark stage on every screen, the photo as large as
+   it stays sharp, and its description plus its place (4 / 33) as the caption. */
+.sheet-gallery.is-ultra { background: #0b0508; }
+.sheet-gallery.is-ultra .gallery-body { background: #0b0508; color: #fff; border-top: 1px solid rgba(255, 255, 255, .08); }
+.sheet-gallery.is-ultra .gallery-body h3 { color: #fff; font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
+.sheet-gallery.is-ultra .gallery-body .tag { background: rgba(255, 255, 255, .1); color: rgba(255, 255, 255, .85); font-variant-numeric: tabular-nums; }
+@media (min-width: 900px) {
+  .sheet-gallery.is-ultra { width: min(880px, 92vw); }
+  .sheet-gallery.is-ultra .gallery-slides { aspect-ratio: auto; height: min(74vh, 720px); }
+  .sheet-gallery.is-ultra .gallery-slide img { padding: 12px; }
+  .sheet-gallery.is-ultra .gallery-body { padding: 16px 24px 20px; }
+}
