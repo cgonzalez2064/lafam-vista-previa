@@ -1202,18 +1202,17 @@
   }
 
   /* ---------- Gallery clips as animated images ----------
-     The still poster loads first; once a clip tile is on screen (and the visitor
-     has not asked for less motion or less data) the animated WebP takes over. */
-  var anims = document.querySelectorAll('img[data-anim]');
-  if (anims.length && !stillOnly()){
-    var startAnim = function(im){ if (im.getAttribute('src') !== im.getAttribute('data-anim')) im.setAttribute('src', im.getAttribute('data-anim')); };
-    if ('IntersectionObserver' in window){
-      var aio = new IntersectionObserver(function(entries){
-        entries.forEach(function(en){ if (en.isIntersecting){ startAnim(en.target); aio.unobserve(en.target); } });
-      }, { rootMargin: '200px 0px' });
-      anims.forEach(function(im){ aio.observe(im); });
-    } else anims.forEach(startAnim);
-  }
+     Clips always play on a loop (animated WebP, so no browser draws a control
+     over them). Only the site's own "less motion" switch shows the still frame. */
+  var syncAnims = function(){
+    var still = root.classList.contains('a11y-motion');
+    document.querySelectorAll('img[data-anim]').forEach(function(im){
+      var want = im.getAttribute(still && im.hasAttribute('data-still') ? 'data-still' : 'data-anim');
+      if (im.getAttribute('src') !== want) im.setAttribute('src', want);
+    });
+  };
+  syncAnims();
+  if ('MutationObserver' in window) new MutationObserver(syncAnims).observe(root, { attributes: true, attributeFilter: ['class'] });
   langListeners.push(function(){
     document.querySelectorAll('img[data-i18n-alt-es]').forEach(function(im){ im.alt = im.getAttribute(currentLang === 'en' ? 'data-i18n-alt-en' : 'data-i18n-alt-es'); });
   });
@@ -1305,7 +1304,7 @@
           var im = tile.querySelector('img');
           it.type = 'img';
           it.src = tile.classList.contains('gal-anim')
-            ? (stillOnly() ? im.getAttribute('src') : im.getAttribute('data-anim'))
+            ? im.getAttribute('src')
             : (tile.getAttribute('data-path') || im.currentSrc || im.src);
           it.alt = im.alt; it.w = +im.getAttribute('width') || 4; it.h = +im.getAttribute('height') || 5;
           it.el = document.createElement('img'); it.el.alt = it.alt; it.el.decoding = 'async';
