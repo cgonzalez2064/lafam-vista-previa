@@ -1079,3 +1079,39 @@ p a:not(.btn):not([class*="pill"]), .form-note a, .form-fallback a, .doc li a { 
 @media (max-width: 559px) { .hero-prices { gap: 6px; } .hero-prices a { font-size: .78rem; padding: 0 11px; gap: 6px; white-space: nowrap; } }
 @media (max-width: 399px) { .gal-tab { padding: 0 8px; font-size: .8rem; } .gal-filter { gap: 2px; padding: 4px; } }
 @media (max-width: 359px) { .hero-ctas .btn { font-size: .95rem; padding-inline: 16px; white-space: normal; } }
+
+/* ---------- Launch polish (v22): first screen and scroll ----------
+   The first screen writes itself in, line by line; lists settle one item after
+   another as they arrive; gallery tiles rise into place as they scroll in
+   (scroll-driven, no script, only where the browser supports it). Everything
+   here is off with "less motion" (system or the site's own switch). */
+@keyframes rise-in { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.js-motion .hero-copy > * { animation: rise-in 760ms var(--ease-out) both; }
+.js-motion .hero-copy > :nth-child(2) { animation-delay: 70ms; }
+.js-motion .hero-copy > :nth-child(3) { animation-delay: 140ms; }
+.js-motion .hero-copy > :nth-child(4) { animation-delay: 210ms; }
+.js-motion .hero-copy > :nth-child(5) { animation-delay: 280ms; }
+.js-reveal .reveal .price-row, .js-reveal .faq-list.reveal > .faq-item { opacity: 0; transform: translateY(10px); transition: opacity 600ms var(--ease-out), transform 700ms var(--ease-out); }
+.js-reveal .reveal.in .price-row, .js-reveal .faq-list.reveal.in > .faq-item { opacity: 1; transform: none; }
+.js-reveal .reveal.in .price-row:nth-child(2), .js-reveal .faq-list.reveal.in > .faq-item:nth-child(2) { transition-delay: 60ms; }
+.js-reveal .reveal.in .price-row:nth-child(3), .js-reveal .faq-list.reveal.in > .faq-item:nth-child(3) { transition-delay: 120ms; }
+.js-reveal .reveal.in .price-row:nth-child(4), .js-reveal .faq-list.reveal.in > .faq-item:nth-child(4) { transition-delay: 180ms; }
+.js-reveal .faq-list.reveal.in > .faq-item:nth-child(5) { transition-delay: 240ms; }
+.js-reveal .faq-list.reveal.in > .faq-item:nth-child(6) { transition-delay: 300ms; }
+.js-reveal .faq-list.reveal.in > .faq-item:nth-child(n+7) { transition-delay: 360ms; }
+@supports (animation-timeline: view()) {
+  @keyframes tile-in { from { opacity: 0; transform: translateY(28px) scale(.97); } to { opacity: 1; transform: none; } }
+  .js-motion .gal-grid > .gal-item { animation: tile-in linear backwards; animation-timeline: view(); animation-range: entry 0% entry 55%; }
+}
+/* Buttons: a soft light passes over the main call to action on hover. */
+@media (hover: hover) {
+  .btn-emergency, .btn-primary { position: relative; overflow: hidden; isolation: isolate; }
+  .btn-emergency::after, .btn-primary::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .28) 50%, transparent 70%); transform: translateX(-120%); transition: transform 700ms var(--ease-out); pointer-events: none; }
+  .btn-emergency:hover::after, .btn-primary:hover::after { transform: translateX(120%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-motion .hero-copy > *, .js-motion .gal-grid > .gal-item { animation: none !important; }
+  .js-reveal .reveal .price-row, .js-reveal .faq-list.reveal > .faq-item { opacity: 1; transform: none; transition: none; }
+}
+html.a11y-motion .hero-copy > *, html.a11y-motion .gal-grid > .gal-item { animation: none !important; }
+html.a11y-motion .js-reveal .reveal .price-row, html.a11y-motion .js-reveal .faq-list.reveal > .faq-item { opacity: 1; transform: none; transition: none; }

@@ -1,21 +1,25 @@
 {
  "ej-4d": {
   "h": 1176,
+  "sm": 640,
   "src": "ej-4d.webp",
   "w": 1176
  },
  "ej-5d": {
   "h": 1176,
+  "sm": 640,
   "src": "ej-5d.webp",
   "w": 1176
  },
  "ej-5d-luz": {
   "h": 1176,
+  "sm": 640,
   "src": "ej-5d-luz.webp",
   "w": 1176
  },
  "ej-silueta": {
   "h": 1176,
+  "sm": 640,
   "src": "ej-silueta.webp",
   "w": 1176
  },
@@ -121,6 +125,7 @@
  },
  "g21": {
   "h": 735,
+  "sm": 640,
   "src": "gallery/g21.jpg",
   "w": 816
  },
@@ -166,6 +171,7 @@
  },
  "g30": {
   "h": 1132,
+  "sm": 640,
   "src": "gallery/g30.jpg",
   "w": 910
  },
@@ -201,6 +207,7 @@
  },
  "hero-1": {
   "h": 1156,
+  "sm": 640,
   "src": "hero/hero-1.jpg",
   "w": 960
  },
@@ -211,21 +218,25 @@
  },
  "hero-5d": {
   "h": 1176,
+  "sm": 640,
   "src": "hero-5d.webp",
   "w": 1176
  },
  "svc-cirugia": {
   "h": 912,
+  "sm": 640,
   "src": "svc-cirugia.webp",
   "w": 1400
  },
  "svc-ginecologia": {
   "h": 1001,
+  "sm": 640,
   "src": "svc-ginecologia.webp",
   "w": 1400
  },
  "svc-prenatal": {
   "h": 933,
+  "sm": 640,
   "src": "svc-prenatal.webp",
   "w": 1400
  },
@@ -236,41 +247,49 @@
  },
  "us-1": {
   "h": 1176,
+  "sm": 640,
   "src": "us-1.webp",
   "w": 1176
  },
  "us-11": {
   "h": 1176,
+  "sm": 640,
   "src": "us-11.webp",
   "w": 1176
  },
  "us-2": {
   "h": 1176,
+  "sm": 640,
   "src": "us-2.webp",
   "w": 1176
  },
  "us-3": {
   "h": 1176,
+  "sm": 640,
   "src": "us-3.webp",
   "w": 1176
  },
  "us-5": {
   "h": 1176,
+  "sm": 640,
   "src": "us-5.webp",
   "w": 1176
  },
  "us-7": {
   "h": 1176,
+  "sm": 640,
   "src": "us-7.webp",
   "w": 1176
  },
  "us-8": {
   "h": 1176,
+  "sm": 640,
   "src": "us-8.webp",
   "w": 1176
  },
  "us-9": {
   "h": 1176,
+  "sm": 640,
   "src": "us-9.webp",
   "w": 1176
  }
